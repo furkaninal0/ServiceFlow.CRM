@@ -1,0 +1,52 @@
+﻿@model ServiceFlow.CRM.Models.Customer
+
+@{
+    ViewData["Title"] = "Yeni Müşteri";
+}
+
+<h2 class="mb-4">Yeni Müşteri Ekle</h2>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="mb-3">
+                <label asp-for="FullName" class="form-label">Ad Soyad</label>
+                <input asp-for="FullName" class="form-control" placeholder="Örn: Ahmet Yılmaz" />
+                <span asp-validation-for="FullName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">E-posta</label>
+                <input asp-for="Email" class="form-control" placeholder="ornek@mail.com" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Phone" class="form-label">Telefon</label>
+                <input asp-for="Phone" class="form-control" placeholder="0555 111 22 33" />
+                <span asp-validation-for="Phone" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="CompanyName" class="form-label">Firma</label>
+                <input asp-for="CompanyName" class="form-control" placeholder="Örn: Yılmaz Ticaret" />
+                <span asp-validation-for="CompanyName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Notes" class="form-label">Not</label>
+                <textarea asp-for="Notes" class="form-control" rows="4" placeholder="Müşteri hakkında kısa not..."></textarea>
+                <span asp-validation-for="Notes" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Kaydet</button>
+            <a asp-action="Index" class="btn btn-secondary">Geri Dön</a>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

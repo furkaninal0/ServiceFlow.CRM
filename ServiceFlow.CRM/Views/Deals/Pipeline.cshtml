@@ -1,0 +1,76 @@
+﻿@model List<ServiceFlow.CRM.Models.SalesDeal>
+
+@{
+    ViewData["Title"] = "Satış Pipeline";
+
+    var statuses = new[]
+    {
+        "Yeni",
+        "Görüşüldü",
+        "Teklif Verildi",
+        "Kazanıldı",
+        "Kaybedildi"
+    };
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">Satış Pipeline</h2>
+        <p class="text-muted mb-0">Satış fırsatlarını aşamalarına göre takip edin.</p>
+    </div>
+
+    <a asp-action="Create" class="btn btn-primary">+ Yeni Fırsat</a>
+</div>
+
+<div class="row g-3">
+    @foreach (var status in statuses)
+    {
+        var deals = Model.Where(x => x.Status == status).ToList();
+        var totalAmount = deals.Sum(x => x.Amount);
+
+        <div class="col">
+            <div class="card shadow-sm h-100 border-0">
+                <div class="card-header bg-white">
+                    <div class="fw-bold">@status</div>
+                    <div class="small text-muted">
+                        @deals.Count fırsat · @totalAmount.ToString("N0") ₺
+                    </div>
+                </div>
+
+                <div class="card-body bg-light" style="min-height: 500px;">
+                    @if (!deals.Any())
+                    {
+                        <div class="text-muted small text-center py-4">
+                            Bu aşamada fırsat yok.
+                        </div>
+                    }
+
+                    @foreach (var deal in deals)
+                    {
+                        <div class="card mb-3 border-0 shadow-sm">
+                            <div class="card-body">
+                                <div class="fw-bold mb-1">@deal.Title</div>
+
+                                <div class="text-muted small mb-2">
+                                    @deal.Customer?.FullName
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold">
+                                        @deal.Amount.ToString("N0") ₺
+                                    </span>
+
+                                    <a asp-action="Edit"
+                                           asp-route-id="@deal.Id"
+                                           class="btn btn-sm btn-outline-primary">
+                                        Aç
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>

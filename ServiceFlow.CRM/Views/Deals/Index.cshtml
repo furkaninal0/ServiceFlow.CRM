@@ -1,0 +1,83 @@
+﻿@model List<ServiceFlow.CRM.Models.SalesDeal
+>
+
+@{
+    ViewData["Title"] = "Satış Fırsatları";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">Satış Fırsatları</h2>
+        <p class="text-muted mb-0">Müşterilere ait teklif ve satış süreçlerini yönetin.</p>
+    </div>
+
+    <div>
+        <a asp-action="Pipeline" class="btn btn-outline-primary me-2">Pipeline</a>
+        <a asp-action="Create" class="btn btn-primary">+ Yeni Fırsat</a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        @if (!Model.Any())
+        {
+            <div class="text-center text-muted py-5">
+                Henüz satış fırsatı eklenmemiş.
+            </div>
+        }
+        else
+        {
+            <table class="table table-hover align-middle">
+                <thead>
+                    <tr>
+                        <th>Başlık</th>
+                        <th>Müşteri</th>
+                        <th>Tutar</th>
+                        <th>Durum</th>
+                        <th>Tarih</th>
+                        <th class="text-end">İşlem</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var deal in Model)
+                    {
+                        var color = deal.Status switch
+                        {
+                            "Yeni" => "secondary",
+                            "Görüşüldü" => "info",
+                            "Teklif Verildi" => "warning",
+                            "Kazanıldı" => "success",
+                            "Kaybedildi" => "danger",
+                            _ => "dark"
+                        };
+
+                        <tr>
+                            <td>@deal.Title</td>
+                            <td>@deal.Customer?.FullName</td>
+                            <td>@deal.Amount.ToString("N0") ₺</td>
+                            <td>
+                                <span class="badge bg-@color">@deal.Status</span>
+                            </td>
+                            <td>@deal.CreatedAt.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td class="text-end">
+                                <a asp-action="Edit" asp-route-id="@deal.Id" class="btn btn-sm btn-warning">
+                                    Düzenle
+                                </a>
+
+                                <form asp-action="Delete" asp-route-id="@deal.Id" method="post" class="d-inline">
+                                    @Html.AntiForgeryToken()
+
+                                    <button type="submit"
+                                            class="btn btn-sm btn-danger"
+                                            onclick="return confirm('Bu fırsatı silmek istediğine emin misin?')">
+                                        Sil
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
